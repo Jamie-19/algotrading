@@ -40,3 +40,10 @@ def get_historical_data(symbol,start_date,interval):
     df = pd.DataFrame(hist_json[0]['candles']) #The JSON object is converted to a pandas dataframe
 
     return df #The dataframe is returned
+
+#taking an example of apple's stock here
+symbol = 'AAPL'
+start_date = '1993-01-01'
+interval = '1W'
+aapl = get_historical_data(symbol,start_date,interval)
+aapl.tail()
