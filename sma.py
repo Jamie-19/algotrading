@@ -13,10 +13,11 @@ import pandas_ta as ta
 import matplotlib.pyplot as plt
 from termcolor import colored as cl
 import math
+from docx import Document
 
 # Load the data
 plt.rcParams['figure.figsize'] = (20, 10)
-plt.style.use('fivethrityeight')
+plt.style.use('fivethirtyeight')
 
 # Get the data
 #Extract the historical data using Benzinga API
@@ -43,7 +44,25 @@ def get_historical_data(symbol,start_date,interval):
 
 #taking the historical data of apple's stock here
 symbol = 'AAPL'
-start_date = '1993-01-01'
+start_date = '2022-01-01'
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 aapl.tail()
+
+# Convert the dataframe to a table
+doc = Document()
+
+table = doc.add_table(rows=1, cols=len(aapl.columns))
+for i, column in enumerate(aapl.columns):
+    table.cell(0, i).text = column
+
+for _, row in aapl.iterrows():
+    row_cells = table.add_row().cells
+    for i, value in enumerate(row):
+        row_cells[i].text = str(value)
+
+# Save the document as a Word file
+doc.save('historical_data.docx')
+
+
+
