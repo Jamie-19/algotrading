@@ -41,7 +41,7 @@ def get_historical_data(symbol,start_date,interval):
 
     return df #The dataframe is returned
 
-#taking an example of apple's stock here
+#taking the historical data of apple's stock here
 symbol = 'AAPL'
 start_date = '1993-01-01'
 interval = '1W'
