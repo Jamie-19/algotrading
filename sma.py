@@ -44,7 +44,7 @@ def get_historical_data(symbol,start_date,interval):
 
 #taking the historical data of apple's stock here
 symbol = 'AAPL'
-start_date = '2022-01-01'
+start_date = '2022-01-01' #when changing the start date also consider to change the output file format
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 aapl.tail()
@@ -62,7 +62,7 @@ for _, row in aapl.iterrows():
         row_cells[i].text = str(value)
 
 # Save the document as a Word file
-doc.save('historical_data.docx')
+doc.save('historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
 
 
 
