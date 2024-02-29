@@ -12,7 +12,9 @@ import pandas_ta as ta
 import matplotlib.pyplot as plt
 from termcolor import colored as cl
 import math
-from docx import Document
+from wordconvert import to_word
+from data_fetch import get_data
+
 
 # Load the data
 plt.rcParams['figure.figsize'] = (20, 10)
@@ -45,25 +47,29 @@ The historical data contains the open, high, low, close, and volume of the stock
 
 #taking the historical data of apple's stock here
 symbol = 'AAPL'
-start_date = '2022-01-01' #when changing the start date also consider to change the output file format
+start_date = '2024-01-01' #when changing the start date also consider to change the output file format
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 aapl.tail()
 
+
+
+to_word(aapl) #The dataframe is converted to a Word document using the to_word function
 # Convert the dataframe to a table
-doc = Document()
+# doc = Document()
 
-table = doc.add_table(rows=1, cols=len(aapl.columns))
-for i, column in enumerate(aapl.columns):
-    table.cell(0, i).text = column
+# table = doc.add_table(rows=1, cols=len(aapl.columns))
+# for i, column in enumerate(aapl.columns):
+#     table.cell(0, i).text = column
 
-for _, row in aapl.iterrows():
-    row_cells = table.add_row().cells
-    for i, value in enumerate(row):
-        row_cells[i].text = str(value)
+# for _, row in aapl.iterrows():
+#     row_cells = table.add_row().cells
+#     for i, value in enumerate(row):
+#         row_cells[i].text = str(value)
 
-# Save the document as a Word file
-doc.save('historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
+# # Save the document as a Word file
+# doc.save('historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
 
+# Calculate the 50-week high and the 40-week low using donchian channels
 
 
