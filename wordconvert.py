@@ -12,4 +12,4 @@ def generate_word_document(data):
         for i, value in enumerate(row):
             row_cells[i].text = str(value)
 
-    doc.save('Output/historical_data.docx')
+    doc.save('output/historical_data.docx')
