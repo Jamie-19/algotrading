@@ -1,8 +1,9 @@
-#Function to get the data in Docx format
-
+#Function to convert the data to a word document
 from docx import Document
-def generate_word_document(data):
+
+def to_word(data, filename):
     doc = Document()
+
     table = doc.add_table(rows=1, cols=len(data.columns))
     for i, column in enumerate(data.columns):
         table.cell(0, i).text = column
@@ -12,4 +13,4 @@ def generate_word_document(data):
         for i, value in enumerate(row):
             row_cells[i].text = str(value)
 
-    doc.save('output/historical_data.docx')
+    doc.save(filename)
