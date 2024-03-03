@@ -75,3 +75,7 @@ get_data(aapl)
 # Calculate the 50-week high and the 40-week low using donchian channels
 
 
+aapl[['dcl','dcm','dcu']] = aapl.ta.donchian(lower_length=40, upper_length=50)
+aapl=aapl.dropna()
+
+
