@@ -72,22 +72,6 @@ aapl = get_historical_data(symbol,start_date,interval)
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
 get_data(aapl) 
 
- #The dataframe is converted to a Word document using the to_word function
-#Convert the dataframe to a table
-# doc = Document()
-
-# table = doc.add_table(rows=1, cols=len(aapl.columns))
-# for i, column in enumerate(aapl.columns):
-#     table.cell(0, i).text = column
-
-# for _, row in aapl.iterrows():
-#     row_cells = table.add_row().cells
-#     for i, value in enumerate(row):
-#         row_cells[i].text = str(value)
-
-# # Save the document as a Word file
-# doc.save('output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
-
 # Calculate the 50-week high and the 40-week low using donchian channels
 
 
