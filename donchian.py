@@ -74,8 +74,11 @@ get_data(aapl)
 
 # Calculate the 50-week high and the 40-week low using donchian channels
 
+aapl[['dcl','dcm','dcu']] = aapl.ta.donchian(lower_length=40, upper_length=50) 
+aapl=aapl.dropna().drop('time',axis=1).rename(colunms={'datetime':'date'})
+aapl = aapl.set_index('date')
+aapl.index = pd.to_datetime(aapl.index)
 
-aapl[['dcl','dcm','dcu']] = aapl.ta.donchian(lower_length=40, upper_length=50)
-aapl=aapl.dropna()
+aapl.tail()
 
 
