@@ -70,12 +70,25 @@ aapl = get_historical_data(symbol,start_date,interval)
 
 # Calculate the 50-week high and the 40-week low using donchian channels
 
+'''
+The donchian function is used to calculate the 50-week high and the 40-week low of the stock.
+The function takes two parameters: lower_length and upper_length.
+The lower_length parameter is the length of the lower band of the donchian channel, which is used to calculate the 40-week low.
+The upper_length parameter is the length of the upper band of the donchian channel, which is used to calculate the 50-week high.
+The function returns a pandas dataframe containing the 50-week high, the 40-week low, and the 20-week midline of the stock.
+The 50-week high is stored in the dcl column, the 40-week low is stored in the dcm column, and the 20-week midline is stored in the dcu column.
+'''
+
 aapl[['dcl', 'dcm', 'dcu']] = aapl.ta.donchian(lower_length = 40, upper_length = 50)
 aapl = aapl.dropna().drop('time', axis = 1).rename(columns = {'dateTime':'date'})
 aapl = aapl.set_index('date')
 aapl.index = pd.to_datetime(aapl.index,utc=True).date
 
 aapl.tail()
+
+#PLotting the donchian channels
+
+
 
 #Extracting the word in both word and text format
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
