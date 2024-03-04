@@ -26,8 +26,6 @@ plt.style.use('fivethirtyeight')
 #Extract the historical data using Benzinga API
 
 
-
-
 def get_historical_data(symbol,start_date,interval):
 
     """
@@ -65,7 +63,7 @@ The historical data contains the open, high, low, close, and volume of the stock
 
 #taking the historical data of apple's stock here
 symbol = 'AAPL'
-start_date = '2022-01-01' #when changing the start date also consider to change the output file format
+start_date = '2001-01-01' #when changing the start date also consider to change the output file format
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 
@@ -83,7 +81,7 @@ The 50-week high is stored in the dcl column, the 40-week low is stored in the d
 aapl[['dcl', 'dcm', 'dcu']] = aapl.ta.donchian(lower_length = 40, upper_length = 50)
 aapl = aapl.dropna().drop('time', axis = 1).rename(columns = {'dateTime':'date'})
 aapl = aapl.set_index('date')
-aapl.index = pd.to_datetime(aapl.index,utc=True).date
+aapl.index = pd.to_datetime(aapl.index,utc=True)
 
 aapl.tail()
 
