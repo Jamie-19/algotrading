@@ -93,6 +93,7 @@ The stock’s price is plotted as a line graph, and the donchian channels are pl
 The function also adds a legend to the graph to indicate the stock’s price and the donchian channels.
 Basically plotting the dcl dcm dcu we got in a graph format for better understanding
 '''
+
 plot_graph(aapl,'output/donchian_channels.png')
 
 
