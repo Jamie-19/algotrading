@@ -96,7 +96,6 @@ plt.legend()
 plt.title('AAPL stock price with Donchian Channels')
 plt.xlabel('Date')
 plt.ylabel('Close')
-plt.show()
 
 #Extracting the data in both word and text format
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
