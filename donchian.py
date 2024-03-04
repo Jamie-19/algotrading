@@ -68,17 +68,17 @@ start_date = '2022-01-01' #when changing the start date also consider to change 
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 
-
-to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
-get_data(aapl) 
-
 # Calculate the 50-week high and the 40-week low using donchian channels
 
-aapl[['dcl','dcm','dcu']] = aapl.ta.donchian(lower_length=40, upper_length=50) 
-aapl=aapl.dropna().drop('time',axis=1).rename(colunms={'datetime':'date'})
+aapl[['dcl', 'dcm', 'dcu']] = aapl.ta.donchian(lower_length = 40, upper_length = 50)
+aapl = aapl.dropna().drop('time', axis = 1).rename(columns = {'dateTime':'date'})
 aapl = aapl.set_index('date')
-aapl.index = pd.to_datetime(aapl.index)
+aapl.index = pd.to_datetime(aapl.index,utc=True).date
 
 aapl.tail()
+
+#Extracting the word in both word and text format
+to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
+get_data(aapl) 
 
 
