@@ -90,7 +90,7 @@ aapl.tail()
 
 
 
-#Extracting the word in both word and text format
+#Extracting the data in both word and text format
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
 get_data(aapl) 
 
