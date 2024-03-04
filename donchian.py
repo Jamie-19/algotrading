@@ -15,6 +15,7 @@ import math
 from docx import Document
 from wordconvert import to_word
 from data_fetch import get_data
+from plot import plot_graph
 
 
 # Load the data
@@ -87,15 +88,15 @@ aapl.index = pd.to_datetime(aapl.index,utc=True).date
 aapl.tail()
 
 #PLotting the donchian channels
-
-plt.plot(aapl[-300:].close,label='Close Price',color='blue')
-plt.plot(aapl[-300:].dcl,color='black',linestyle='--',alpha=0.3)
-plt.plot(aapl[-300:].dcm,color='orange',label='DCM')
-plt.plot(aapl[-300:].dcu,color='black',linestyle='--',alpha=0.3,label='DCL,DCU')
-plt.legend()
-plt.title('AAPL stock price with Donchian Channels')
-plt.xlabel('Date')
-plt.ylabel('Close')
+'''
+The plot function is used to plot the stock’s price along with the donchian channels.
+The function takes a pandas dataframe containing the stock’s price and the donchian channels as input.
+The function plots the stock’s price along with the donchian channels in a graph format.
+The stock’s price is plotted as a line graph, and the donchian channels are plotted as dashed lines.
+The function also adds a legend to the graph to indicate the stock’s price and the donchian channels.
+Basically plotting the dcl dcm dcu we got in a graph format for better understanding
+'''
+plot_graph(aapl,'output/donchian_channels.png')
 
 #Extracting the data in both word and text format
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
