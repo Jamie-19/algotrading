@@ -1,8 +1,8 @@
 ''' 
 Our trading strategy follows the principle of simplicity yet a very effective breakout strategy.
-We enter the market if: the stock’s current high exceeds the 50-week high
-We exit the market if: the stock’s current low sinks below the 40-week low
-We’ll be using the Donchian Channel indicator in order to keep track of the 50-week high and the 40-week low. This strategy is a weekly trading system, so, we’ll be backtesting it on the weekly timeframe.
+We enter the market if: the stock's current high exceeds the 50-week high
+We exit the market if: the stock's current low sinks below the 40-week low
+We'll be using the Donchian Channel indicator in order to keep track of the 50-week high and the 40-week low. This strategy is a weekly trading system, so, we’ll be backtesting it on the weekly timeframe.
 '''
 
 # Import the libraries
@@ -86,11 +86,11 @@ aapl.tail()
 
 #PLotting the donchian channels
 '''
-The plot function is used to plot the stock’s price along with the donchian channels.
-The function takes a pandas dataframe containing the stock’s price and the donchian channels as input.
-The function plots the stock’s price along with the donchian channels in a graph format.
-The stock’s price is plotted as a line graph, and the donchian channels are plotted as dashed lines.
-The function also adds a legend to the graph to indicate the stock’s price and the donchian channels.
+The plot function is used to plot the stock's price along with the donchian channels.
+The function takes a pandas dataframe containing the stock's price and the donchian channels as input.
+The function plots the stock's price along with the donchian channels in a graph format.
+The stock's price is plotted as a line graph, and the donchian channels are plotted as dashed lines.
+The function also adds a legend to the graph to indicate the stock's price and the donchian channels.
 Basically plotting the dcl dcm dcu we got in a graph format for better understanding
 '''
 
@@ -106,3 +106,35 @@ to_word(aapl,'output/historical_data.docx') # if want to get more data please co
 get_data(aapl) 
 
 
+# Implementing the trading strategy
+''' 
+The trading strategy is implemented using the following steps:
+1. Initialize the trading signal to 0.
+2. Loop through each row in the historical data.
+3. If the stock's current high exceeds the 50-week high, set the trading signal to 1.
+'''
+def implement_strategy(aapl, investment):
+    
+    in_position = False
+    equity = investment
+    
+    for i in range(3, len(aapl)):
+        if aapl['high'][i] == aapl['dcu'][i] and in_position == False:
+            no_of_shares = math.floor(equity/aapl.close[i])
+            equity -= (no_of_shares * aapl.close[i])
+            in_position = True
+            print(cl('BUY: ', color = 'green', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${aapl.close[i]} on {str(aapl.index[i])[:10]}')
+        elif aapl['low'][i] == aapl['dcl'][i] and in_position == True:
+            equity += (no_of_shares * aapl.close[i])
+            in_position = False
+            print(cl('SELL: ', color = 'red', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${aapl.close[i]} on {str(aapl.index[i])[:10]}')
+    if in_position == True:
+        equity += (no_of_shares * aapl.close[i])
+        print(cl(f'\nClosing position at {aapl.close[i]} on {str(aapl.index[i])[:10]}', attrs = ['bold']))
+        in_position = False
+
+    earning = round(equity - investment, 2)
+    roi = round(earning / investment * 100, 2)
+    print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
+    
+implement_strategy(aapl, 100000) #initial investment of $100,000
