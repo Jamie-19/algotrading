@@ -15,28 +15,41 @@ Parameters:
 aapl (pandas dataframe): Historical data of the stock.
 investment (float): Amount of money to be invested in the stock.
 '''
-from termcolor import colored as cl
+
+import pandas as pd
 import math
-def implement_strategy(aapl, investment):
-    
+from termcolor import colored as cl
+
+def implement_strategy(csv_file, investment, output_file):
+    aapl = pd.read_csv(csv_file)
+    aapl['dcu'] = aapl['high'].rolling(window=20).max()
+    aapl['dcl'] = aapl['low'].rolling(window=10).min()
+
     in_position = False
     equity = investment
-    
-    for i in range(3, len(aapl)):
-        if aapl['high'][i] == aapl['dcu'][i] and in_position == False:
-            no_of_shares = math.floor(equity/aapl.close[i])
-            equity -= (no_of_shares * aapl.close[i])
+    results = []
+
+    for i in range(3, len(aapl)): 
+        if aapl['high'].iloc[i] == aapl['dcu'].iloc[i] and not in_position:
+            no_of_shares = math.floor(equity / aapl.close.iloc[i]) 
+            equity -= (no_of_shares * aapl.close.iloc[i]) 
             in_position = True
-            print(cl('BUY: ', color = 'green', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${aapl.close[i]} on {str(aapl.index[i])[:10]}')
-        elif aapl['low'][i] == aapl['dcl'][i] and in_position == True:
-            equity += (no_of_shares * aapl.close[i])
+            results.append((aapl.index[i], 'BUY', no_of_shares, aapl.close.iloc[i]))
+        elif aapl['low'].iloc[i] == aapl['dcl'].iloc[i] and in_position:
+            equity += (no_of_shares * aapl.close.iloc[i])
             in_position = False
-            print(cl('SELL: ', color = 'red', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${aapl.close[i]} on {str(aapl.index[i])[:10]}')
-    if in_position == True:
-        equity += (no_of_shares * aapl.close[i])
-        print(cl(f'\nClosing position at {aapl.close[i]} on {str(aapl.index[i])[:10]}', attrs = ['bold']))
+            results.append((aapl.index[i], 'SELL', no_of_shares, aapl.close.iloc[i]))
+
+    if in_position:
+        equity += (no_of_shares * aapl.close.iloc[i])
+        results.append((aapl.index[i], 'CLOSE', no_of_shares, aapl.close.iloc[i]))
         in_position = False
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
-    print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
+    results.append(('EARNING:', earning, 'ROI:', roi))
+
+    # Save results to a CSV file
+    results_df = pd.DataFrame(results, columns=['Date', 'Action', 'Shares', 'Price'])
+    results_df.to_csv(output_file, index=False)
+    print("Results saved to", output_file)
