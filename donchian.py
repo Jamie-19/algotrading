@@ -17,7 +17,6 @@ from wordconvert import to_word
 from data_fetch import get_data
 from plot import plot_graph
 
-
 # Load the data
 plt.rcParams['figure.figsize'] = (20, 10)
 plt.style.use('fivethirtyeight')
@@ -107,6 +106,7 @@ get_data(aapl)
 
 
 # Implementing the trading strategy
+# The function is imported from strategy.py
 ''' 
 The trading strategy is implemented using the following steps:
 1. Initialize the trading signal to 0.
@@ -136,5 +136,6 @@ def implement_strategy(aapl, investment):
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
     print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
-    
+
+
 implement_strategy(aapl, 100000) #initial investment of $100,000
