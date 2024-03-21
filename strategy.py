@@ -36,24 +36,25 @@ def implement_strategy(csv_file, investment, output_file, output_file1):
             no_of_shares = math.floor(equity / aapl.close.iloc[i]) 
             equity -= (no_of_shares * aapl.close.iloc[i]) 
             in_position = True
-            results.append((aapl.index[i], 'BUY', no_of_shares, aapl.close.iloc[i], 'green'))  # Color green for BUY
+            results.append((aapl.index[i], 'BUY', no_of_shares, aapl.close.iloc[i]))
         elif aapl['low'].iloc[i] == aapl['dcl'].iloc[i] and in_position:
             equity += (no_of_shares * aapl.close.iloc[i])
             in_position = False
-            results.append((aapl.index[i], 'SELL', no_of_shares, aapl.close.iloc[i], 'red'))  # Color red for SELL
+            results.append((aapl.index[i], 'SELL', no_of_shares, aapl.close.iloc[i]))
 
     if in_position:
         equity += (no_of_shares * aapl.close.iloc[i])
-        results.append((aapl.index[i], 'CLOSE', no_of_shares, aapl.close.iloc[i], 'red' if earning < 0 else 'green'))  # Color red if earning is negative, else green
+        results.append((aapl.index[i], 'CLOSE', no_of_shares, aapl.close.iloc[i]))
         in_position = False
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
-    results.append(('EARNING:', earning, 'ROI:', roi, 'red' if roi < 0 else 'green'))  # Color red if ROI is negative, else green
+    results.append(('EARNING:', earning, 'ROI:', roi))
 
-    # Save results to CSV file
-    results_df = pd.DataFrame(results, columns=['Date', 'Action', 'Shares', 'Price', 'Color'])
-    result_data(results_df)
+    # Save results to a CSV file
+    results_df = pd.DataFrame(results, columns=['Date', 'Action', 'Shares', 'Price'])
+    result_data(output_file,results_df)
 
-    # Save results to Word file
+    # Save results to a Word file with formatting
     result_word(results_df, output_file1)
+    print("Results saved to", output_file)
