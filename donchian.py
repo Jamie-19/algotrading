@@ -16,6 +16,7 @@ from docx import Document
 from wordconvert import to_word
 from data_fetch import get_data
 from plot import plot_graph
+from strategy import implement_strategy
 
 # Load the data
 plt.rcParams['figure.figsize'] = (20, 10)
@@ -107,6 +108,7 @@ get_data(aapl)
 
 # Implementing the trading strategy
 # The function is imported from strategy.py
+
 ''' 
 The trading strategy is implemented using the following steps:
 1. Initialize the trading signal to 0.
@@ -114,28 +116,4 @@ The trading strategy is implemented using the following steps:
 3. If the stock's current high exceeds the 50-week high, set the trading signal to 1.
 '''
 
-def implement_strategy(aapl, investment):
-    in_position = False
-    equity = investment
-
-    for i in range(3, len(aapl)):
-        if aapl['high'].iloc[i] == aapl['dcu'].iloc[i] and not in_position:
-            no_of_shares = math.floor(equity / aapl.close.iloc[i])
-            equity -= (no_of_shares * aapl.close.iloc[i])
-            in_position = True
-            print(cl('BUY: ', color='green', attrs=['bold']), f'{no_of_shares} Shares are bought at ${aapl.close.iloc[i]} on {str(aapl.index[i])[:10]}')
-        elif aapl['low'].iloc[i] == aapl['dcl'].iloc[i] and in_position:
-            equity += (no_of_shares * aapl.close.iloc[i])
-            in_position = False
-            print(cl('SELL: ', color='red', attrs=['bold']), f'{no_of_shares} Shares are bought at ${aapl.close.iloc[i]} on {str(aapl.index[i])[:10]}')
-
-    if in_position:
-        equity += (no_of_shares * aapl.close.iloc[i])
-        print(cl(f'\nClosing position at {aapl.close.iloc[i]} on {str(aapl.index[i])[:10]}', attrs=['bold']))
-        in_position = False
-
-    earning = round(equity - investment, 2)
-    roi = round(earning / investment * 100, 2)
-    print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs=['bold']))
-
-implement_strategy(aapl, 100000)  # initial investment of $100,000
+implement_strategy(aapl, 10000) #initial investment of 10000 dollars
