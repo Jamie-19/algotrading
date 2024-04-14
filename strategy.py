@@ -28,21 +28,21 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     previous_price = None  # Variable to store the previous price
 
     for i in range(3, len(dataframe)):
-        if dataframe['high'][i] == dataframe['dcu'][i] and not in_position:
-            no_of_shares = math.floor(equity / dataframe.close[i])
-            equity -= (no_of_shares * dataframe.close[i])
+        if dataframe.at[i, 'high'] == dataframe.at[i, 'dcu'] and not in_position:
+            no_of_shares = math.floor(equity / dataframe.at[i, 'close'])
+            equity -= (no_of_shares * dataframe.at[i, 'close'])
             in_position = True
-            signals.append((str(dataframe.index[i])[:10], 'BUY', no_of_shares, dataframe.close[i]))
-            previous_price = dataframe.close[i]  # Set previous price
-        elif dataframe['low'][i] == dataframe['dcl'][i] and in_position:
-            equity += (no_of_shares * dataframe.close[i])
+            signals.append((str(dataframe.index[i])[:10], 'BUY', no_of_shares, dataframe.at[i, 'close']))
+            previous_price = dataframe.at[i, 'close']  # Set previous price
+        elif dataframe.at[i, 'low'] == dataframe.at[i, 'dcl'] and in_position:
+            equity += (no_of_shares * dataframe.at[i, 'close'])
             in_position = False
-            signals.append((str(dataframe.index[i])[:10], 'SELL', no_of_shares, dataframe.close[i]))
+            signals.append((str(dataframe.index[i])[:10], 'SELL', no_of_shares, dataframe.at[i, 'close']))
             previous_price = None  # Reset previous price
     # If still in position at the end
     if in_position:
-        equity += (no_of_shares * dataframe.close[i])
-        signals.append((str(dataframe.index[i])[:10], 'CLOSE', no_of_shares, dataframe.close[i]))
+        equity += (no_of_shares * dataframe.at[i, 'close'])
+        signals.append((str(dataframe.index[i])[:10], 'CLOSE', no_of_shares, dataframe.at[i, 'close']))
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
@@ -56,4 +56,5 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     result_word(results_df, output_file1)
 
     print("Results saved to", output_file, "and", output_file1)
+
 
