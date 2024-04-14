@@ -1,0 +1,13 @@
+There is literally no point in going after traditional algo trading strategies like SMA crossover or RSI threshold breakout strategy as it has proven to be obsolete given their simplistic nature and more importantly, the massive volume of participants who are trying to implement them in the market.
+
+So instead of embracing those strategies, it’s time to try something new. In this article, we’ll be using Python and Benzinga’s APIs to construct and backtest a new trading strategy that will help us beat the market.
+
+
+Please install the below packages as we will be using them
+pandas, 
+requests, 
+pandas_ta,
+matplotlib,
+the secondary/optional packages include:
+termcolor,
+math
