@@ -116,4 +116,4 @@ The trading strategy is implemented using the following steps:
 3. If the stock's current high exceeds the 50-week high, set the trading signal to 1.
 '''
 
-implement_strategy("output/historical_data.csv", 100000, "output/result/result_csv.csv","output/result/result_word.word") #initial investment of 10000 dollars
+implement_strategy("output/historical_data.csv", 100000, "output/result/result_csv.csv","output/result/result_word.docx") #initial investment of 10000 dollars
