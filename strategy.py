@@ -56,6 +56,6 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     # Save results to a Word file with formatting
     result_word(results_df, output_file1)
 
-    print("Results saved to", output_file, "and", output_file1)
+    print("Results saved successfully!")
 
 
