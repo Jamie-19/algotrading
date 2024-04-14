@@ -47,7 +47,7 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
 
     # Save results to a CSV file
-    results_df = pd.DataFrame(columns=['Earnings','ROI'])
+    results_df = pd.DataFrame({'Earnings': [earning], 'ROI': [roi]})
     result_data(output_file,results_df)
 
     # Save results to a Word file with formatting
