@@ -25,6 +25,7 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     in_position = False
     equity = investment
     signals = []  # List to store buy and sell signals
+    previous_price = None  # Variable to store the previous price
 
     for i in range(3, len(dataframe)):
         if dataframe['high'][i] == dataframe['dcu'][i] and not in_position:
@@ -32,11 +33,12 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
             equity -= (no_of_shares * dataframe.close[i])
             in_position = True
             signals.append((str(dataframe.index[i])[:10], 'BUY', no_of_shares, dataframe.close[i]))
+            previous_price = dataframe.close[i]  # Set previous price
         elif dataframe['low'][i] == dataframe['dcl'][i] and in_position:
             equity += (no_of_shares * dataframe.close[i])
             in_position = False
             signals.append((str(dataframe.index[i])[:10], 'SELL', no_of_shares, dataframe.close[i]))
-
+            previous_price = None  # Reset previous price
     # If still in position at the end
     if in_position:
         equity += (no_of_shares * dataframe.close[i])
@@ -54,3 +56,4 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     result_word(results_df, output_file1)
 
     print("Results saved to", output_file, "and", output_file1)
+
