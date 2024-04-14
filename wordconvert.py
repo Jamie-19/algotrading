@@ -19,16 +19,11 @@ def to_word(data, filename):
 #Function to convert the result to a word document
 def result_word(results_df, output_file):
     doc = Document()
-
-    # Add a table to the document
     table = doc.add_table(rows=1, cols=len(results_df.columns))
-
-    # Add column headers to the table
     hdr_cells = table.rows[0].cells
     for i, column_name in enumerate(results_df.columns):
         hdr_cells[i].text = column_name
 
-    # Add data to the table
     for _, row in results_df.iterrows():
         row_cells = table.add_row().cells
         for i, value in enumerate(row):
@@ -42,8 +37,8 @@ def result_word(results_df, output_file):
                     for run in paragraph.runs:
                         run.font.color.rgb = RGBColor(0, 128, 0)  # Green color for BUY
             elif row['Action'] == 'SELL':
-                # Determine profit or loss for this sell signal
-                if row['Price'] > row['Previous Price']:
+                profit_or_loss = row.get('Price', 0) - row.get('Previous Price', 0)
+                if profit_or_loss > 0:
                     for paragraph in cell.paragraphs:
                         for run in paragraph.runs:
                             run.font.color.rgb = RGBColor(0, 128, 0)  # Green color for profit
@@ -52,5 +47,4 @@ def result_word(results_df, output_file):
                         for run in paragraph.runs:
                             run.font.color.rgb = RGBColor(255, 0, 0)  # Red color for loss
 
-    # Save the document
     doc.save(output_file)
