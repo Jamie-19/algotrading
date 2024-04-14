@@ -2,7 +2,7 @@
 
 '''
 The implement_strategy function is used to implement the trading strategy using the donchian channels.
-The function takes two parameters: aapl and investment.
+The function takes two parameters: dataframe and investment.
 The aapl parameter is a pandas dataframe containing the historical data of the stock.
 The investment parameter is the amount of money to be invested in the stock.
 The function initializes the trading signal to 0 and loops through each row in the historical data.
@@ -22,37 +22,32 @@ from termcolor import colored as cl
 from data_fetch import result_data
 from wordconvert import result_word
 
-def implement_strategy(csv_file, investment, output_file, output_file1):
-    aapl = pd.read_csv(csv_file)
-    aapl['dcu'] = aapl['high'].rolling(window=20).max()
-    aapl['dcl'] = aapl['low'].rolling(window=10).min()
-
+def implement_strategy(dataframe, investment, output_file, output_file1):
+  
     in_position = False
     equity = investment
-    results = []
-
-    for i in range(3, len(aapl)): 
-        if aapl['high'].iloc[i] == aapl['dcu'].iloc[i] and not in_position:
-            no_of_shares = math.floor(equity / aapl.close.iloc[i]) 
-            equity -= (no_of_shares * aapl.close.iloc[i]) 
+    
+    for i in range(3, len(dataframe)):
+        if dataframe['high'][i] == dataframe['dcu'][i] and in_position == False:
+            no_of_shares = math.floor(equity/dataframe.close[i])
+            equity -= (no_of_shares * dataframe.close[i])
             in_position = True
-            results.append((aapl.index[i], 'BUY', no_of_shares, aapl.close.iloc[i]))
-        elif aapl['low'].iloc[i] == aapl['dcl'].iloc[i] and in_position:
-            equity += (no_of_shares * aapl.close.iloc[i])
+            print(cl('BUY: ', color = 'green', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${dataframe.close[i]} on {str(dataframe.index[i])[:10]}')
+        elif dataframe['low'][i] == dataframe['dcl'][i] and in_position == True:
+            equity += (no_of_shares * dataframe.close[i])
             in_position = False
-            results.append((aapl.index[i], 'SELL', no_of_shares, aapl.close.iloc[i]))
-
-    if in_position:
-        equity += (no_of_shares * aapl.close.iloc[i])
-        results.append((aapl.index[i], 'CLOSE', no_of_shares, aapl.close.iloc[i]))
+            print(cl('SELL: ', color = 'red', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${dataframe.close[i]} on {str(dataframe.index[i])[:10]}')
+    if in_position == True:
+        equity += (no_of_shares * dataframe.close[i])
+        print(cl(f'\nClosing position at {dataframe.close[i]} on {str(dataframe.index[i])[:10]}', attrs = ['bold']))
         in_position = False
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
-    results.append(('EARNING:', earning, 'ROI:', roi))
+    print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
 
     # Save results to a CSV file
-    results_df = pd.DataFrame(results, columns=['Date', 'Action', 'Shares', 'Price'])
+    results_df = pd.DataFrame(columns=['Earnings','ROI'])
     result_data(output_file,results_df)
 
     # Save results to a Word file with formatting
