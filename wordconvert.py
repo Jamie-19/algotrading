@@ -17,7 +17,6 @@ def to_word(data, filename):
     doc.save(filename)
 
 #Function to convert the result to a word document
-
 def result_word(results_df, output_file):
     doc = Document()
 
@@ -39,9 +38,19 @@ def result_word(results_df, output_file):
             else:
                 cell.text = str(value)
             if row['Action'] == 'BUY':
-                cell.font.color.rgb = RGBColor(0, 128, 0)  # Green color for BUY
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        run.font.color.rgb = RGBColor(0, 128, 0)  # Green color for BUY
             elif row['Action'] == 'SELL':
-                cell.font.color.rgb = RGBColor(255, 0, 0)  # Red color for SELL
+                # Determine profit or loss for this sell signal
+                if row['Price'] > row['Previous Price']:
+                    for paragraph in cell.paragraphs:
+                        for run in paragraph.runs:
+                            run.font.color.rgb = RGBColor(0, 128, 0)  # Green color for profit
+                else:
+                    for paragraph in cell.paragraphs:
+                        for run in paragraph.runs:
+                            run.font.color.rgb = RGBColor(255, 0, 0)  # Red color for loss
 
     # Save the document
     doc.save(output_file)
