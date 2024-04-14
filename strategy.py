@@ -18,38 +18,39 @@ investment (float): Amount of money to be invested in the stock.
 
 import pandas as pd
 import math
-from termcolor import colored as cl
 from data_fetch import result_data
 from wordconvert import result_word
 
 def implement_strategy(dataframe, investment, output_file, output_file1):
-  
     in_position = False
     equity = investment
-    
+    signals = []  # List to store buy and sell signals
+
     for i in range(3, len(dataframe)):
-        if dataframe['high'][i] == dataframe['dcu'][i] and in_position == False:
-            no_of_shares = math.floor(equity/dataframe.close[i])
+        if dataframe['high'][i] == dataframe['dcu'][i] and not in_position:
+            no_of_shares = math.floor(equity / dataframe.close[i])
             equity -= (no_of_shares * dataframe.close[i])
             in_position = True
-            print(cl('BUY: ', color = 'green', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${dataframe.close[i]} on {str(dataframe.index[i])[:10]}')
-        elif dataframe['low'][i] == dataframe['dcl'][i] and in_position == True:
+            signals.append((str(dataframe.index[i])[:10], 'BUY', no_of_shares, dataframe.close[i]))
+        elif dataframe['low'][i] == dataframe['dcl'][i] and in_position:
             equity += (no_of_shares * dataframe.close[i])
             in_position = False
-            print(cl('SELL: ', color = 'red', attrs = ['bold']), f'{no_of_shares} Shares are bought at ${dataframe.close[i]} on {str(dataframe.index[i])[:10]}')
-    if in_position == True:
+            signals.append((str(dataframe.index[i])[:10], 'SELL', no_of_shares, dataframe.close[i]))
+
+    # If still in position at the end
+    if in_position:
         equity += (no_of_shares * dataframe.close[i])
-        print(cl(f'\nClosing position at {dataframe.close[i]} on {str(dataframe.index[i])[:10]}', attrs = ['bold']))
-        in_position = False
+        signals.append((str(dataframe.index[i])[:10], 'CLOSE', no_of_shares, dataframe.close[i]))
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
-    print(cl(f'EARNING: ${earning} ; ROI: {roi}%', attrs = ['bold']))
+    print(f'EARNING: ${earning} ; ROI: {roi}%')
 
     # Save results to a CSV file
-    results_df = pd.DataFrame({'Earnings': [earning], 'ROI': [roi]})
-    result_data(output_file,results_df)
+    results_df = pd.DataFrame(signals, columns=['Date', 'Action', 'Shares', 'Price'])
+    result_data(output_file, results_df)
 
     # Save results to a Word file with formatting
     result_word(results_df, output_file1)
-    print("Results saved to", output_file)
+
+    print("Results saved to", output_file, "and", output_file1)
