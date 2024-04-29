@@ -62,8 +62,8 @@ The historical data contains the open, high, low, close, and volume of the stock
         return None
 
 #taking the historical data of apple's stock here
-symbol = 'AAPL'
-start_date = '1993-01-01' #when changing the start date also consider to change the output file format
+symbol = ''
+start_date = '2020-01-01' #when changing the start date also consider to change the output file format
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
 
