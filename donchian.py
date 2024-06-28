@@ -2,21 +2,29 @@
 Our trading strategy follows the principle of simplicity yet a very effective breakout strategy.
 We enter the market if: the stock's current high exceeds the 50-week high
 We exit the market if: the stock's current low sinks below the 40-week low
-We'll be using the Donchian Channel indicator in order to keep track of the 50-week high and the 40-week low. This strategy is a weekly trading system, so, we’ll be backtesting it on the weekly timeframe.
+We'll be using the Donchian Channel indicator in order to keep track of the 50-week high and the 40-week low. 
+This strategy is a weekly trading system, so, we'll be backtesting it on the weekly timeframe.
 '''
 
 # Import the libraries
 import pandas as pd
+import os
 import requests
 import pandas_ta as ta
 import matplotlib.pyplot as plt
 from termcolor import colored as cl
-import math
 from docx import Document
 from wordconvert import to_word
 from data_fetch import get_data
 from plot import plot_graph
 from strategy import implement_strategy
+from dotenv import load_dotenv
+from whatsapp_quickstart import send_document,upload_media,send_whatsapp_message,send_message,get_text_message_input
+load_dotenv()
+
+token = os.getenv('TOKEN')
+print(token)
+recepieint_waid = os.getenv('RECIPIENT_WAID')
 
 # Load the data
 plt.rcParams['figure.figsize'] = (20, 10)
@@ -41,7 +49,7 @@ The historical data contains the open, high, low, close, and volume of the stock
     try:
         url = "https://api.benzinga.com/api/v2/bars"  # The URL of the API endpoint
         querstring = {
-            "token": "ff9b415f27594cb7becd93e108504055",
+            "token": token,
             "symbols": symbol,
             "from": start_date,
             "interval": interval
@@ -62,7 +70,7 @@ The historical data contains the open, high, low, close, and volume of the stock
         return None
 
 #taking the historical data of apple's stock here
-symbol = ''
+symbol = 'AAPL'
 start_date = '2020-01-01' #when changing the start date also consider to change the output file format
 interval = '1W'
 aapl = get_historical_data(symbol,start_date,interval)
@@ -103,7 +111,16 @@ The to_word function is used to convert the historical data of the stock to a wo
 the get_data function is used to convert the historical data of the stock to a text file.
 '''
 to_word(aapl,'output/historical_data.docx') # if want to get more data please consider changing the code so as to convert to a text file else the code will be slow to run
-get_data(aapl) 
+get_data(aapl)
+
+send_whatsapp_message()
+file_path = 'output/historical_data.pdf'
+upload_media(file_path)
+media_response = upload_media(file_path)
+print(media_response)
+if 'id' in media_response:
+    media_id = media_response['id']
+    send_document(media_id,os.getenv('RECIPIENT_WAID')) 
 
 
 # Implementing the trading strategy
@@ -116,4 +133,19 @@ The trading strategy is implemented using the following steps:
 3. If the stock's current high exceeds the 50-week high, set the trading signal to 1.
 '''
 
-implement_strategy(aapl, 100000, "output/result/result_csv.csv","output/result/result_word.docx") #initial investment of 10000 dollars
+earning,roi=implement_strategy(aapl, 100000, "output/result/result_pdf.pdf","output/result/result_word.docx") #initial investment of 10000 dollars
+
+
+data = get_text_message_input(
+    recipient=os.getenv('RECIPIENT_WAID'), text=f"The earning is : {earning} , The ROI is : {roi}%"
+)
+send_message(data)
+
+send_whatsapp_message()
+file_path = 'output/result/result_pdf.pdf'
+upload_media(file_path)
+media_response = upload_media(file_path)
+print(media_response)
+if 'id' in media_response:
+    media_id = media_response['id']
+send_document(media_id,os.getenv('RECIPIENT_WAID')) 
