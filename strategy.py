@@ -21,6 +21,7 @@ import math
 from data_fetch import result_data
 from wordconvert import result_word
 
+
 def implement_strategy(dataframe, investment, output_file, output_file1):
     in_position = False
     equity = investment
@@ -47,7 +48,8 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
 
     earning = round(equity - investment, 2)
     roi = round(earning / investment * 100, 2)
-    print(f'EARNING: ${earning} ; ROI: {roi}%')
+    print(f'Earnings: ${earning}')
+    print(f'Return on Investment: {roi}%')
 
     # Save results to a CSV file
     results_df = pd.DataFrame(signals, columns=['Date', 'Action', 'Shares', 'Price'])
@@ -56,6 +58,6 @@ def implement_strategy(dataframe, investment, output_file, output_file1):
     # Save results to a Word file with formatting
     result_word(results_df, output_file1)
 
-    print("Results saved successfully!")
+    return earning, roi
 
 
